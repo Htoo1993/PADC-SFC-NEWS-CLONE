@@ -18,6 +18,7 @@ import com.padcmyanmar.sfc.adapters.NewsAdapter;
 import com.padcmyanmar.sfc.components.EmptyViewPod;
 import com.padcmyanmar.sfc.components.SmartRecyclerView;
 import com.padcmyanmar.sfc.components.SmartScrollListener;
+import com.padcmyanmar.sfc.data.models.NewsModel;
 import com.padcmyanmar.sfc.delegates.NewsItemDelegate;
 import com.padcmyanmar.sfc.events.RestApiEvents;
 import com.padcmyanmar.sfc.events.TapNewsEvent;
@@ -91,6 +92,7 @@ public class NewsListActivity extends BaseActivity
         });
 
         rvNews.addOnScrollListener(mSmartScrollListener);
+
     }
 
     @Override

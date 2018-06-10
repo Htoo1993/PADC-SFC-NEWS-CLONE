@@ -1,5 +1,8 @@
 package com.padcmyanmar.sfc.data.models;
 
+import android.content.Context;
+
+import com.padcmyanmar.sfc.data.db.AppDataBase;
 import com.padcmyanmar.sfc.data.vo.NewsVO;
 import com.padcmyanmar.sfc.events.RestApiEvents;
 import com.padcmyanmar.sfc.network.MMNewsDataAgent;
@@ -24,6 +27,8 @@ public class NewsModel {
     private List<NewsVO> mNews;
     private int mmNewsPageIndex = 1;
 
+    private AppDataBase mAppDataBase;
+
     private NewsModel() {
         EventBus.getDefault().register(this);
         mNews = new ArrayList<>();
@@ -36,6 +41,10 @@ public class NewsModel {
         return objInstance;
     }
 
+    public void initDatabase(Context context) {
+        mAppDataBase = AppDataBase.getNewsDatabase(context);
+    }
+
     public void startLoadingMMNews() {
         MMNewsDataAgentImpl.getInstance().loadMMNews(AppConstants.ACCESS_TOKEN, mmNewsPageIndex);
     }
@@ -44,5 +53,16 @@ public class NewsModel {
     public void onNewsDataLoaded(RestApiEvents.NewsDataLoadedEvent event) {
         mNews.addAll(event.getLoadNews());
         mmNewsPageIndex = event.getLoadedPageIndex() + 1;
+
+        List<NewsVO> newsList = event.getLoadNews();
+
+        for (NewsVO news : newsList){
+            mAppDataBase.publicationDao().insertPublication(news.getPublication());
+
+            mAppDataBase.newsDao().insertNews(news);
+
+        }
+
+
     }
 }

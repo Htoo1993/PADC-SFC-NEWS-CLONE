@@ -15,9 +15,7 @@ import java.util.List;
 /**
  * Created by aung on 12/2/17.
  */
-@Entity(tableName = "news", foreignKeys = {
-        @ForeignKey(entity = PublicationVO.class, parentColumns = "id", childColumns = "publication-id",deferred = true),
-})
+@Entity(tableName = "news")
 public class NewsVO {
 
     @PrimaryKey
@@ -31,6 +29,7 @@ public class NewsVO {
     @SerializedName("details")
     private String details;
 
+    @Ignore
     @SerializedName("images")
     private List<String> images;
 
@@ -57,12 +56,15 @@ public class NewsVO {
     }
     */
 
+    @Ignore
     @SerializedName("favorites")
     private List<FavoriteActionVO> favoriteActions;
 
+    @Ignore
     @SerializedName("comments")
     private List<CommentActionVO> commentActions;
 
+    @Ignore
     @SerializedName("sent-tos")
     private List<SentToVO> sentToActions;
 
@@ -103,5 +105,45 @@ public class NewsVO {
 
     public List<SentToVO> getSentToActions() {
         return sentToActions;
+    }
+
+    public void setNewsId(@NonNull String newsId) {
+        this.newsId = newsId;
+    }
+
+    public void setBrief(String brief) {
+        this.brief = brief;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
+
+    public void setPostedDate(String postedDate) {
+        this.postedDate = postedDate;
+    }
+
+    public void setPublication(PublicationVO publication) {
+        this.publication = publication;
+    }
+
+    public void setPublicationId(String publicationId) {
+        this.publicationId = publicationId;
+    }
+
+    public void setFavoriteActions(List<FavoriteActionVO> favoriteActions) {
+        this.favoriteActions = favoriteActions;
+    }
+
+    public void setCommentActions(List<CommentActionVO> commentActions) {
+        this.commentActions = commentActions;
+    }
+
+    public void setSentToActions(List<SentToVO> sentToActions) {
+        this.sentToActions = sentToActions;
     }
 }
