@@ -48,6 +48,8 @@ public class NewsListActivity extends BaseActivity
 
     private NewsAdapter mNewsAdapter;
 
+    private NewsModel newsModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +58,8 @@ public class NewsListActivity extends BaseActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        newsModel=new NewsModel();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -92,6 +96,9 @@ public class NewsListActivity extends BaseActivity
         });
 
         rvNews.addOnScrollListener(mSmartScrollListener);
+
+        newsModel.initDatabase(getApplicationContext());
+        newsModel.startLoadingMMNews();
 
     }
 

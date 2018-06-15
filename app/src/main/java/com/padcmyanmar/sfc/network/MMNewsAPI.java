@@ -1,5 +1,7 @@
 package com.padcmyanmar.sfc.network;
 
+import io.reactivex.Observable;
+
 import com.padcmyanmar.sfc.network.reponses.GetNewsResponse;
 
 import retrofit2.Call;
@@ -18,4 +20,8 @@ public interface MMNewsAPI {
     Call<GetNewsResponse> loadMMNews(
             @Field("page") int pageIndex,
             @Field("access_token") String accessToken);
+
+    @POST("v1/getMMNews.php")
+    Observable<GetNewsResponse> getNewsList(@Field("page") int pageIndex,
+                                            @Field("access_token") String accessToken);
 }
