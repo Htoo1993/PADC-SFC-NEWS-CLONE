@@ -19,18 +19,24 @@ import com.padcmyanmar.sfc.components.EmptyViewPod;
 import com.padcmyanmar.sfc.components.SmartRecyclerView;
 import com.padcmyanmar.sfc.components.SmartScrollListener;
 import com.padcmyanmar.sfc.data.models.NewsModel;
+import com.padcmyanmar.sfc.data.vo.NewsVO;
 import com.padcmyanmar.sfc.delegates.NewsItemDelegate;
 import com.padcmyanmar.sfc.events.RestApiEvents;
 import com.padcmyanmar.sfc.events.TapNewsEvent;
+import com.padcmyanmar.sfc.network.reponses.GetNewsResponse;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.subjects.PublishSubject;
 
 public class NewsListActivity extends BaseActivity
         implements NewsItemDelegate {
@@ -49,6 +55,8 @@ public class NewsListActivity extends BaseActivity
     private NewsAdapter mNewsAdapter;
 
     private NewsModel newsModel;
+
+    private PublishSubject<List<NewsVO>> pubNewsResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,8 +105,31 @@ public class NewsListActivity extends BaseActivity
 
         rvNews.addOnScrollListener(mSmartScrollListener);
 
+        pubNewsResponse = PublishSubject.create();
+        pubNewsResponse.subscribe(new Observer<List<NewsVO>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(List<NewsVO> value) {
+                mNewsAdapter.appendNewData(value);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
         newsModel.initDatabase(getApplicationContext());
-        newsModel.startLoadingMMNews();
+        newsModel.startLoadingMMNews(pubNewsResponse);
 
     }
 
