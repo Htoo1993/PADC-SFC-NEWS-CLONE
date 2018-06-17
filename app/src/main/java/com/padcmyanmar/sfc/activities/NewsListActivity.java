@@ -31,11 +31,17 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observer;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
 public class NewsListActivity extends BaseActivity
@@ -113,8 +119,8 @@ public class NewsListActivity extends BaseActivity
             }
 
             @Override
-            public void onNext(List<NewsVO> value) {
-                mNewsAdapter.appendNewData(value);
+            public void onNext(List<NewsVO> news) {
+                mNewsAdapter.appendNewData(news);
             }
 
             @Override
@@ -130,6 +136,8 @@ public class NewsListActivity extends BaseActivity
 
         newsModel.initDatabase(getApplicationContext());
         newsModel.startLoadingMMNews(pubNewsResponse);
+
+        PrimeNumberCalculation();
 
     }
 
@@ -208,6 +216,52 @@ public class NewsListActivity extends BaseActivity
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onErrorInvokingAPI(RestApiEvents.ErrorInvokingAPIEvent event) {
         Snackbar.make(rvNews, event.getErrorMsg(), Snackbar.LENGTH_INDEFINITE).show();
+    }
+
+    public void PrimeNumberCalculation(){
+        final int[] intArr= {1,2,3,4,5};
+        Single<Integer> integerPrime = Single.fromCallable(new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                return operation(intArr);
+            }
+        });
+
+        integerPrime
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Integer>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(Integer prime) {
+//                        tvText.setText("Operation has finished. The value is " + integer + "\n");
+                        Log.d("Prime no : ", prime.toString());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+    }
+
+    private Integer operation(int[] intArrs) {
+        int primeNo = 0;
+        try {
+           for (int no : intArrs){
+               if(no % 2 > 0){
+                   primeNo = no;
+               }
+           }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return primeNo;
     }
 
 }

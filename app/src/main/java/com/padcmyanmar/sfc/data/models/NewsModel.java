@@ -106,8 +106,8 @@ public class NewsModel {
                     }
 
                     @Override
-                    public void onNext(List<NewsVO> value) {
-                        newsList.onNext(value);
+                    public void onNext(List<NewsVO> news) {
+                        newsList.onNext(news);
                     }
 
                     @Override
